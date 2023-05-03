@@ -5,6 +5,7 @@
 //  Created by CM on 28/04/2023.
 
 import UIKit
+import CoreData
 
 class MainViewController: UIViewController {
     let tableView = UITableView()
@@ -17,7 +18,8 @@ class MainViewController: UIViewController {
     var searchTimer: Timer?
     let viewModel = MainViewModel()
     var locations = [Location]()
-    let tapGestureRecognizer = UITapGestureRecognizer(target: MainViewController.self, action: #selector(dismissKeyboard))
+    var mySavedCities: [City] = []
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,11 +28,16 @@ class MainViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGestureRecognizer.cancelsTouchesInView = false
+        tapGestureRecognizer.delegate = self
+        view.addGestureRecognizer(tapGestureRecognizer)
     }
     
     override func viewDidLayoutSubviews() {
         clearViews()
         setupViews()
+        mySavedCities = viewModel.fetchSavedCities()
     }
     
     
@@ -104,7 +111,6 @@ private extension MainViewController {
 // MARK: - Keyboard Handling
 private extension MainViewController {
     @objc func keyboardWillShow(notification: Notification) {
-        // TODO: Apply Search Database based on Core Data or Realm
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             UIView.animate(withDuration: 0.5) { [self] in
                 logoImageView.alpha = 0.0
@@ -154,6 +160,23 @@ extension MainViewController: UIGestureRecognizerDelegate {
 
 // MARK: - UISearchBarDelegate
 extension MainViewController: UISearchBarDelegate {
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        print("tag searchBar is clicked")
+        if let searchText = searchBar.text, searchText.isEmpty {
+            locations = mySavedCities.map { city in
+                return Location(version: nil, key: city.key, type: nil, rank: nil, localizedName: city.city, country: nil, administrativeArea: nil)
+            }
+            if locations.count > 1 {
+                UIView.animate(withDuration: 0.1) { [weak self] in
+                    self?.gradientView.alpha = 1
+                    self?.expandSearchBar()
+                    self?.tableView.reloadData()
+                }
+            }
+        }
+    }
+    
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         let pattern = "^([a-zA-Z\\u0080-\\u024F]+(?:. |-| |'))*[a-zA-Z\\u0080-\\u024F]*$"
         
@@ -179,17 +202,30 @@ extension MainViewController: UISearchBarDelegate {
 // MARK: - UITableViewDataSource
 extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.locationsCount
+        if !mySavedCities.isEmpty && searchBar.text?.count ?? 0 < 2 {
+            return mySavedCities.count        } else {
+                return viewModel.locationsCount
+                
+            }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "suggestionCell", for: indexPath)
-        let location = viewModel.locations[indexPath.row]
+        let location: Location?
+        if !mySavedCities.isEmpty && searchBar.text?.count ?? 0 < 2 {
+            let savedLocations = mySavedCities.map { city in
+                return Location(version: nil, key: city.key, type: nil, rank: nil, localizedName: city.city, country: nil, administrativeArea: nil)
+            }
+            location = savedLocations[indexPath.row]
+        } else {
+            location = viewModel.locations[indexPath.row]
+        }
+        
         cell.backgroundColor = .clear
         cell.textLabel?.textColor = .white
         cell.textLabel?.font = UIFont(name: "Poppins-SemiBold", size: 18.0)
         cell.selectionStyle = .none
-        cell.textLabel?.text = location.localizedName
+        cell.textLabel?.text = location?.localizedName
         return cell
     }
 }
@@ -197,9 +233,19 @@ extension MainViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension MainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedLocation = viewModel.locations[indexPath.row]
-        if let key = selectedLocation.key {
-            
+        let selectedLocation: Location?
+        
+        if !mySavedCities.isEmpty && searchBar.text?.count ?? 0 < 2 {
+            let savedLocations = mySavedCities.map { city in
+                return Location(version: nil, key: city.key, type: nil, rank: nil, localizedName: city.city, country: nil, administrativeArea: nil)
+            }
+            selectedLocation = savedLocations[indexPath.row]
+        } else {
+            selectedLocation = viewModel.locations[indexPath.row]
+        }
+        
+        if let key = selectedLocation?.key {
+            viewModel.saveCityToCoreData(city: selectedLocation?.localizedName ?? "", key: selectedLocation?.key ?? "")
             viewModel.searchCurrentWeather(key) { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -207,8 +253,8 @@ extension MainViewController: UITableViewDelegate {
                         DispatchQueue.main.async {
                             let detailVC = WeatherDetailViewController()
                             detailVC.dailyModel = dailyModel
-                            detailVC.city = selectedLocation.localizedName ?? ""
-                            detailVC.key = selectedLocation.key ?? ""
+                            detailVC.city = selectedLocation?.localizedName ?? ""
+                            detailVC.key = selectedLocation?.key ?? ""
                             detailVC.modalPresentationStyle = .fullScreen
                             detailVC.viewModel = WeatherDetailViewModel(dailyModel: dailyModel)
                             self.present(detailVC, animated: true, completion: nil)

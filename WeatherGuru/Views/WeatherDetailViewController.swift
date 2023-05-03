@@ -6,6 +6,7 @@
 //
 
 import WebKit
+import CoreData
 
 class WeatherDetailViewController: UIViewController {
     
@@ -50,6 +51,21 @@ class WeatherDetailViewController: UIViewController {
                     self?.tomorrowImageView.isHidden = true
                 }
             }
+        }
+    }
+    
+    func saveCityToCoreData(city: String, key: String) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let context = appDelegate.persistentContainer.viewContext
+        
+        let newCity = NSEntityDescription.insertNewObject(forEntityName: "City", into: context) as! City
+        newCity.city = city
+        newCity.key = key
+        
+        do {
+            try context.save()
+        } catch {
+            print("Failed to save city: \(error.localizedDescription)")
         }
     }
 }

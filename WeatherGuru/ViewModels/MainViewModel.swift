@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import UIKit
+import CoreData
 
 class MainViewModel {
     private let weatherAPI = WeatherAPI()
@@ -38,6 +40,48 @@ class MainViewModel {
             case .failure(let error):
                 completion(.failure(error))
             }
+        }
+    }
+    
+    func fetchSavedCities() -> [City] {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return [] }
+        let context = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<City>(entityName: "City")
+        do {
+            let savedCities = try context.fetch(fetchRequest)
+            return savedCities
+        } catch {
+            print("Failed to fetch cities: \(error.localizedDescription)")
+            return []
+        }
+    }
+    
+    func saveCityToCoreData(city: String, key: String) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let context = appDelegate.persistentContainer.viewContext
+        
+        guard let newCity = NSEntityDescription.insertNewObject(forEntityName: "City", into: context) as? City else { return }
+        newCity.city = city
+        newCity.key = key
+        
+        do {
+            try context.save()
+        } catch {func saveCityToCoreData(city: String, key: String) {
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+            let context = appDelegate.persistentContainer.viewContext
+            
+            let newCity = NSEntityDescription.insertNewObject(forEntityName: "City", into: context) as! City
+            newCity.city = city
+            newCity.key = key
+            
+            do {
+                try context.save()
+            } catch {
+                print("Failed to save city: \(error.localizedDescription)")
+            }
+        }
+            
+            print("Failed to save city: \(error.localizedDescription)")
         }
     }
 }

@@ -10,11 +10,7 @@ import UIKit
 extension MainViewController {
     func setupViews() {
         self.view.backgroundColor = .white
-        
-        tapGestureRecognizer.cancelsTouchesInView = false
-        tapGestureRecognizer.delegate = self
-        view.addGestureRecognizer(tapGestureRecognizer)
-        
+
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
         
@@ -86,7 +82,7 @@ extension MainViewController {
             gradientView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             gradientView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             gradientView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 10),
-            gradientView.heightAnchor.constraint(equalToConstant: 320),
+            gradientView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             
             tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 8),
             tableView.leadingAnchor.constraint(equalTo: gradientView.leadingAnchor, constant: 8),
