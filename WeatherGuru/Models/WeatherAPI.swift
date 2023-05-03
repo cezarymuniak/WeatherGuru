@@ -8,7 +8,7 @@
 import Foundation
 
 struct WeatherAPI {
-    let apiKey = "qDgJCGE2zQFcSa3Hjs2jrHckDYBcGU24"
+    let apiKey = "kMxsCRoq7dbGhmM5DizceduWBHqLs0DW"
     let baseUrl = "https://dataservice.accuweather.com/"
     let locationEndpoint = "locations/v1/cities/search"
     let locationsEndpoint = "locations/v1/cities/autocomplete"
