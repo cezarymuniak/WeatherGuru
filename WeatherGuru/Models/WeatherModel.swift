@@ -24,11 +24,11 @@ struct DailyForecast: Codable, Equatable {
     let epochDate: Int?
     let temperature: Temperature?
     let day: Day?
-    let night: Day?
+    let night: Night?
     let sources: [String]?
     let mobileLink: String?
     let link: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case date = "Date"
         case epochDate = "EpochDate"
@@ -55,29 +55,49 @@ struct Day: Codable, Equatable {
     }
 }
 
+// MARK: - Night
+struct Night: Codable, Equatable {
+    let icon: Int?
+    let iconPhrase: String?
+    let hasPrecipitation: Bool?
+    let precipitationType: String?
+    let precipitationIntensity: String?
+
+    enum CodingKeys: String, CodingKey {
+        case icon = "Icon"
+        case iconPhrase = "IconPhrase"
+        case hasPrecipitation = "HasPrecipitation"
+        case precipitationType = "PrecipitationType"
+        case precipitationIntensity = "PrecipitationIntensity"
+    }
+}
+
 // MARK: - Temperature
 struct Temperature: Codable, Equatable {
     let minimum: Imum?
     let maximum: Imum?
-    
+
     enum CodingKeys: String, CodingKey {
         case minimum = "Minimum"
         case maximum = "Maximum"
     }
 }
 
-
 // MARK: - Imum
 struct Imum: Codable, Equatable {
-    let value: Int?
-    let unit: String?
+    let value: Double?
+    let unit: Unit?
     let unitType: Int?
-    
+
     enum CodingKeys: String, CodingKey {
         case value = "Value"
         case unit = "Unit"
         case unitType = "UnitType"
     }
+}
+
+enum Unit: String, Codable, Equatable {
+    case c = "C"
 }
 
 // MARK: - Headline
@@ -91,7 +111,7 @@ struct Headline: Codable, Equatable {
     let endEpochDate: Int?
     let mobileLink: String?
     let link: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case effectiveDate = "EffectiveDate"
         case effectiveEpochDate = "EffectiveEpochDate"

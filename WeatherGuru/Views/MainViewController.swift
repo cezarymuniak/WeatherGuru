@@ -104,6 +104,7 @@ private extension MainViewController {
 // MARK: - Keyboard Handling
 private extension MainViewController {
     @objc func keyboardWillShow(notification: Notification) {
+        // TODO: Apply Search Database based on Core Data or Realm
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             UIView.animate(withDuration: 0.5) { [self] in
                 logoImageView.alpha = 0.0
@@ -207,6 +208,7 @@ extension MainViewController: UITableViewDelegate {
                             let detailVC = WeatherDetailViewController()
                             detailVC.dailyModel = dailyModel
                             detailVC.city = selectedLocation.localizedName ?? ""
+                            detailVC.key = selectedLocation.key ?? ""
                             detailVC.modalPresentationStyle = .fullScreen
                             detailVC.viewModel = WeatherDetailViewModel(dailyModel: dailyModel)
                             self.present(detailVC, animated: true, completion: nil)

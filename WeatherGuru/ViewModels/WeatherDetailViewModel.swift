@@ -10,7 +10,9 @@ import UIKit
 
 class WeatherDetailViewModel {
     private var dailyModel: DailyWeatherModel?
-    
+    private var nextDaysModel: WeatherModel?
+    private let weatherAPI = WeatherAPI()
+
     init(dailyModel: DailyWeatherModel?) {
         self.dailyModel = dailyModel
     }
@@ -34,8 +36,8 @@ class WeatherDetailViewModel {
     }
     
     func getTemperature() -> String? {
-        if let temperatureValue = dailyModel?.first?.temperature?.metric?.value {
-            return "\(temperatureValue)°"
+        if let temperatureValue = dailyModel?.first?.temperature?.metric {
+            return "\(temperatureValue.value ?? 0.0)° \(temperatureValue.unit ?? "")"
         }
         return nil
     }
@@ -72,5 +74,24 @@ class WeatherDetailViewModel {
             return "\(NSLocalizedString("pressure", comment: "")) \(pressureValue.value ?? 0.0) \(pressureValue.unit ?? "")"
         }
         return "\(NSLocalizedString("pressure", comment: "")) N/A"
+    }
+    
+    func getTommorowWeather() -> String {
+        if let tempValue = nextDaysModel?.dailyForecasts?[1].temperature?.minimum {
+            return "\( NSLocalizedString("expectedTempetature", comment: "Przewidywana jutrzejsza min. temperatura")) \(tempValue.value ?? 0) °\(tempValue.unit?.rawValue ?? "")"
+        }
+        return ""
+    }
+    
+    func searchTommorowWeather(_ locationKey: String, completion: @escaping (Result<WeatherModel, Error>) -> Void) {
+        weatherAPI.getTommorowWeather(locationKey: locationKey) { result in
+            switch result {
+            case .success(let weather):
+                self.nextDaysModel = weather
+                completion(.success(weather))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
 }

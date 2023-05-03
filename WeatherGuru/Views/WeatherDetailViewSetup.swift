@@ -108,32 +108,13 @@ extension WeatherDetailViewController {
         pressureLabel.text = viewModel?.getPressure()
         gradientView.addSubview(pressureLabel)
         
-        let rainImageView = UIImageView(image: UIImage(named: "rain"))
-        rainImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        let rainLabel = UILabel()
-        rainLabel.translatesAutoresizingMaskIntoConstraints = false
-        rainLabel.font = UIFont(name: "Poppins-Light", size: 12.0)
-        rainLabel.textColor = .white
-        rainLabel.text = "rain"
+        let tomorrowImageView = UIImageView(image: UIImage(named: "calendar"))
+        tomorrowImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        let uvIndexImageView = UIImageView(image: UIImage(named: "calendar"))
-        uvIndexImageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let uvIndexLabel = UILabel()
-        uvIndexLabel.translatesAutoresizingMaskIntoConstraints = false
-        uvIndexLabel.font = UIFont(name: "Poppins-Light", size: 12.0)
-        uvIndexLabel.textColor = .white
-        uvIndexLabel.text = NSLocalizedString("expectedTempetature", comment: "Przewidywana jutrzejsza temperatura")
-        
-        let visibilityImageView = UIImageView(image: UIImage(named: "pressure"))
-        visibilityImageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let visibilityLabel = UILabel()
-        visibilityLabel.translatesAutoresizingMaskIntoConstraints = false
-        visibilityLabel.font = UIFont(name: "Poppins-Light", size: 12.0)
-        visibilityLabel.textColor = .white
-        visibilityLabel.text = "Visibility"
+        tomorrowLabel.translatesAutoresizingMaskIntoConstraints = false
+        tomorrowLabel.font = UIFont(name: "Poppins-Light", size: 12.0)
+        tomorrowLabel.textColor = .white
         
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -153,7 +134,7 @@ extension WeatherDetailViewController {
         secondRowStack.spacing = 5
         stackView.addArrangedSubview(secondRowStack)
         
-        let thirdRowStack = UIStackView(arrangedSubviews: [uvIndexImageView, uvIndexLabel ])
+        let thirdRowStack = UIStackView(arrangedSubviews: [tomorrowImageView, tomorrowLabel ])
         thirdRowStack.axis = .horizontal
         thirdRowStack.spacing = 5
         stackView.addArrangedSubview(thirdRowStack)
@@ -238,15 +219,8 @@ extension WeatherDetailViewController {
             pressureImageView.widthAnchor.constraint(equalToConstant: 30),
             pressureImageView.heightAnchor.constraint(equalToConstant: 30),
             
-            rainImageView.widthAnchor.constraint(equalToConstant: 30),
-            rainImageView.heightAnchor.constraint(equalToConstant: 30),
-            
-            uvIndexImageView.widthAnchor.constraint(equalToConstant: 30),
-            uvIndexImageView.heightAnchor.constraint(equalToConstant: 30),
-            
-            visibilityImageView.widthAnchor.constraint(equalToConstant: 30),
-            visibilityImageView.heightAnchor.constraint(equalToConstant: 30),
-            
+            tomorrowImageView.widthAnchor.constraint(equalToConstant: 30),
+            tomorrowImageView.heightAnchor.constraint(equalToConstant: 30),
             
             smallerGradientView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             smallerGradientView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),

@@ -26,17 +26,6 @@ class MainViewModel {
         }
     }
     
-    func searchWeather(_ locationKey: String, completion: @escaping (Result<WeatherModel, Error>) -> Void) {
-        weatherAPI.getCurrentWeather(locationKey: locationKey) { result in
-            switch result {
-            case .success(let weather):
-                completion(.success(weather))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
     func location(at index: Int) -> Location {
         return locations[index]
     }

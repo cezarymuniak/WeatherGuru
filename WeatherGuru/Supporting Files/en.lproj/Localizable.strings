@@ -6,7 +6,7 @@
   
 */
 
-"expectedTempetature" = "Expected tomorrow's temperature";
+"expectedTempetature" = "Tomorrow's min. temperature";
 "searchBarPlaceholder" = "Search location";
 "errorLabelText" = "Invalid input. Please try again.";
 "unknownCity" = "Nieznane miasto";

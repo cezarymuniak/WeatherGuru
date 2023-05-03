@@ -6,7 +6,7 @@
   
 */
 
-"expectedTempetature"  = "Przewidywana jutrzejsza temperatura";
+"expectedTempetature"  = "Jutrzejsza min. temperatura";
 "searchBarPlaceholder" = "Wyszukaj miejsce";
 "errorLabelText" = "Nieprawidłowe dane. Spróbuj ponownie.";
 "unknownCity" = "Nieznane miasto";

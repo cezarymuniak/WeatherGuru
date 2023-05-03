@@ -42,8 +42,8 @@ struct WeatherAPI {
         task.resume()
     }
     
-    func getCurrentWeather(locationKey: String, completionHandler: @escaping (Result<WeatherModel, Error>) -> Void) {
-        let urlString = "\(baseUrl)/forecasts/currentconditions/v1/\(locationKey)?apikey=\(apiKey)&details=true&metric=true"
+    func getTommorowWeather(locationKey: String, completionHandler: @escaping (Result<WeatherModel, Error>) -> Void) {
+        let urlString = "\(baseUrl)/forecasts/v1/daily/5day/\(locationKey)?apikey=\(apiKey)&metric=true"
         
         guard let url = URL(string: urlString) else {
             completionHandler(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])))
@@ -76,7 +76,6 @@ struct WeatherAPI {
     
     
     func fetchDailyWeatherData(locationKey: String, completionHandler: @escaping (Result<DailyWeatherModel, Error>) -> Void) {
-        // Replace with your own API URL and API Key
         let urlString = "\(baseUrl)/currentconditions/v1/\(locationKey)?apikey=\(apiKey)&details=true"
         
         guard let url = URL(string: urlString) else {
