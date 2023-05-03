@@ -1,0 +1,16 @@
+/* 
+  Localizable.strings
+  WeatherGuru
+
+  Created by CM on 03/05/2023.
+  
+*/
+
+"expectedTempetature"  = "Przewidywana jutrzejsza temperatura";
+"searchBarPlaceholder" = "Wyszukaj miejsce";
+"errorLabelText" = "Nieprawidłowe dane. Spróbuj ponownie.";
+"unknownCity" = "Nieznane miasto";
+"clickToSeeMoreDetails" = "Zobacz więcej szczegółów";
+"pressure" = "Ciśnienie";
+"wind" = "Wiatr";
+"humidity" = "Wilgotność";

@@ -1,0 +1,16 @@
+/* 
+  Localizable.strings
+  WeatherGuru
+
+  Created by CM on 03/05/2023.
+  
+*/
+
+"expectedTempetature" = "Expected tomorrow's temperature";
+"searchBarPlaceholder" = "Search location";
+"errorLabelText" = "Invalid input. Please try again.";
+"unknownCity" = "Nieznane miasto";
+"clickToSeeMoreDetails" = "See more details";
+"pressure" = "Pressure";
+"wind" = "Wind";
+"humidity" = "Humidity";
